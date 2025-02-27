@@ -21,7 +21,7 @@ Please note: in-game attribution is required. `AutoPosChair 1.0.0 by Uzer Tekton
 >
 >PayPal donation link: https://www.paypal.com/donate/?hosted_button_id=6TTCQN6MDSQHJ
 >
->BOOTH shop page: TBC
+>BOOTH shop page: https://uzertekton.booth.pm/
 
 
 ------------------------------------------------------------------------
@@ -206,7 +206,7 @@ Please donate! I need financial support, every little helps!
 
 PayPal donation link: https://www.paypal.com/donate/?hosted_button_id=6TTCQN6MDSQHJ
 
-BOOTH shop page: TBC
+BOOTH shop page: https://uzertekton.booth.pm/
 
 
 -------------
