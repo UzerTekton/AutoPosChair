@@ -40,7 +40,7 @@ Please note: in-game attribution is required. `AutoPosChair 1.0.0 by Uzer Tekton
 - [Technical notes](#technical-notes)
 - [Version history](#version-history)
 - [Contact](#contact)
-  - [Support me](#support-me)
+  - [Support me](#support-me-1)
 - [Special thanks](#special-thanks)
 - [License](#license)
 
