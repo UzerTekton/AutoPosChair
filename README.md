@@ -11,7 +11,7 @@ By Uzer Tekton
 
 ### Download
 
-Go to Releases page to download: https://github.com/UzerTekton/AutoPosChair/releases/tag/v1.0.0
+Go to Releases page to download: https://github.com/UzerTekton/AutoPosChair/releases
 
 Please note: in-game attribution is required. `AutoPosChair 1.1.0 by Uzer Tekton (MIT License)`
 
