@@ -13,7 +13,7 @@ By Uzer Tekton
 
 Go to Releases page to download: https://github.com/UzerTekton/AutoPosChair/releases/tag/v1.0.0
 
-Please note: in-game attribution is required. `AutoPosChair 1.0.0 by Uzer Tekton (MIT License)`
+Please note: in-game attribution is required. `AutoPosChair 1.1.0 by Uzer Tekton (MIT License)`
 
 >#### Support me
 >
@@ -40,7 +40,7 @@ Please note: in-game attribution is required. `AutoPosChair 1.0.0 by Uzer Tekton
 - [Technical notes](#technical-notes)
 - [Version history](#version-history)
 - [Contact](#contact)
-  - [Support me](#support-me-1)
+  - [Support me](#support-me)
 - [Special thanks](#special-thanks)
 - [License](#license)
 
@@ -89,6 +89,7 @@ Or use link: https://vrchat.com/home/launch?worldId=wrld_48f36aca-2f89-4766-be6f
   - Minimal performance impact, even with large number of chairs
   - Minimal network usage
   - Works with avatar culling
+  - Works with late joiners
   - Smooth adjustment motion
   - In-game error log output
   - Fully commented Udon Graph
@@ -167,12 +168,10 @@ YourDiningChair (Your own Prefab, empty GameObject, zero transform and uniform s
   - The transform method keeps the player perfectly centered from left to right (i.e. no X axis or sideways movement).
 - Calibration cycles loop until the transform is completed within a tolerance distance, with a safety timeout period (default 10 seconds).
 - The calibration only runs when someone sits down, so there is minimal performance impact, even with a large number of chairs.
-- The only network usage is one final sync of the final position fired by the sitting down player when their own calibration is completed. This is mainly for avatars beyond the culling distance to position correctly, because Udon cannot detect whether an avatar is culled (by culling distance), and calibrating with a culled avatar will create inaccurate results.
+- The only network usage is one final sync of the final position fired by the sitting down player when their own calibration is completed. This allows late joiners to use the most accurate results from the owner (who had already completed calibration prior), and for avatars beyond the culling distance to update position correctly using owner's data, because Udon cannot detect whether an avatar is culled (by culling distance), and calibrating with a culled avatar will create inaccurate results.
   - The alternative strategy of doing everything locally (such as the case of UCC 4.0) requires waiting for the remote player to get within a certain range before calibrating. However, there is no way in Udon to tell whether an avatar is culled, nor detect the culling distance settings. Because the culling distance can vary from player to player, if we were to simply assume a calibration range for everyone, it is very easy to have calibrations done on a culled avatar, or have unculled avatar in the distance waiting for calibration while looking weird.
   - This script would instead calibrate remote players regardless of distance, and have the final correct position synced to everyone by the person sitting down, who should always have the most accurate avatar model for calibration and unaffected by any culling. This will ensure even the culled avatars have the correct position, and no avatar is left uncalibrated in the distance.
   - Since it is only one Vector3 variable, synced only one time per sitting down (or adjusting heights etc.), the network usage is minimal and inconsequential in the grand scheme of things.
-  - There is a rare edge case when you walk towards a culled player who is sat down, had changed their height or avatar, and had already finished their re-calibration, their avatar will reload for you locally but not for them, thus triggering a re-calibration locally only for you, during this time if you quickly move away and have their avatar culled again during this calibration, the calibration will be performed on their culled avatar thus creating wrong results.
-    - One way to fix this would be requesting the owner to re-sync every time someone starts a calibration, but this will generate too much requests when someone is sitting down normally and everyone in the server is requesting for a re-sync. Therefore this bug remains unfixed. Udon has no way for detecting culled avatars and we have simply reached the limit of the system.
 - The script reacts to avatar changes and avatar eye height changes while being seated, and restarts calibration automatically.
 - The script uses a fallback method for strange avatars that do not have conventional bone structures or are grossly over-sized, and puts them directly on top the chair (like a plushie) to look correct. Try using VRCat or VRRat.
 - Some functions such as disabling tooltip and VR fix for rotated stations are based on UCC 4.0 by Superbstingray.
@@ -185,6 +184,12 @@ YourDiningChair (Your own Prefab, empty GameObject, zero transform and uniform s
 ------------------------------------------------------------------------
 
 ### Version history
+
+#### AutoPosChair 1.1.0
+
+2025-02-28
+
+- All remote players including late joiners will now always prioritize results from the owner. Culled avatars should now always position correctly.
 
 #### AutoPosChair 1.0.0
 
@@ -228,5 +233,5 @@ AutoPosChair is available under the MIT License with an additional condition:
 
 For use of this Prefab in a VRChat world, an in-game attribution is required, by including the asset title, the version used, author name, and type of license.
 
-`AutoPosChair 1.0.0 by Uzer Tekton (MIT License)`
+`AutoPosChair 1.1.0 by Uzer Tekton (MIT License)`
 
