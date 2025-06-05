@@ -122,10 +122,6 @@ AutoPosChairProximityChecker (Udon Graph)
     - You don't need to be super precise. You can just eyeball it and then adjust the position if necessary.
 - Load up the game and it should work now.
 
-> **Note**: 2025-06-04 Bug and workaround: If the prefab `AutoPosChair` is placed directly into the scene with no parent object, the script will crash due to a `Debug.Log` trying to find the name of a parent GameObject but got `null` because there is no parent object.
->   - To fix this, place the `AutoPosChair` prefab under an empty GameObject parent. (Recommended method)
->   - Alternatively, go into `AutoPosChairCalibrator` Udon Graph, near the top left area of the graph, there is two links going from the "Trying to get chair identity" area, one going to "Log player name when they enter", another going to "Log player name when they exit". Delete these two connections. (If you really must place the prefab without a parent GameObject)
-
 
 #### Making your own chair container Prefab (preferred method)
 
@@ -189,22 +185,28 @@ YourDiningChair (Your own Prefab, empty GameObject, zero transform and uniform s
 
 ### Version history
 
+#### AutoPosChair 1.1.1
+
+2025-06-05
+
+  - Patched the null exception bug when the prefab cannot find a parent object.
+
 #### AutoPosChair 1.1.0
 
 2025-02-28
 
-- All remote players including late joiners will now always prioritize results from the owner. Culled avatars should now always position correctly.
+  - All remote players including late joiners will now always prioritize results from the owner. Culled avatars should now always position correctly.
 
 > **Note**: 2025-06-04 Bug and workaround: If the prefab `AutoPosChair` is placed directly into the scene with no parent object, the script will crash due to a `Debug.Log` trying to find the name of a parent GameObject but got `null` because there is no parent object.
 >   - To fix this, place the `AutoPosChair` prefab under an empty GameObject parent. (Recommended method)
 >   - Alternatively, go into `AutoPosChairCalibrator` Udon Graph, near the top left area of the graph, there is two links going from the "Trying to get chair identity" area, one going to "Log player name when they enter", another going to "Log player name when they exit". Delete these two connections. (If you really must place the prefab without a parent GameObject)
-
+>   - 2025-06-05: This bug is patched in 1.1.1.
 
 #### AutoPosChair 1.0.0
 
 2025-02-27
 
-- Initial release
+  - Initial release
 
 
 ------------------------------------------------------------------------
