@@ -13,7 +13,7 @@ By Uzer Tekton
 
 Go to Releases page to download: https://github.com/UzerTekton/AutoPosChair/releases
 
-Please note: in-game attribution is required. `AutoPosChair 1.1.0 by Uzer Tekton (MIT License)`
+Please note: in-game attribution is required. `AutoPosChair 1.1.1 by Uzer Tekton (MIT License)`
 
 >#### Support me
 >
@@ -244,5 +244,5 @@ AutoPosChair is available under the MIT License with an additional condition:
 
 For use of this Prefab in a VRChat world, an in-game attribution is required, by including the asset title, the version used, author name, and type of license.
 
-`AutoPosChair 1.1.0 by Uzer Tekton (MIT License)`
+`AutoPosChair 1.1.1 by Uzer Tekton (MIT License)`
 
