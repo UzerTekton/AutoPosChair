@@ -4,7 +4,7 @@ A Prefab for VRChat SDK 3 Worlds
 
 By Uzer Tekton
 
-<img src="images/20250227-QuickTest.gif" width=40% height=40%>
+<img src="images/20250227-QuickTest.gif" width=40%>
 
 
 ------------------------------------------------------------------------
@@ -66,7 +66,7 @@ Search for the world `AutoPosChair Demo` in-game.
 
 Or use link: https://vrchat.com/home/launch?worldId=wrld_48f36aca-2f89-4766-be6f-e8122ac2c2de
 
-<img src="images/20250227-World.png" width=40% height=40%>
+<img src="images/20250227-World.png" width=40%>
 
 
 #### Features
@@ -99,7 +99,7 @@ Or use link: https://vrchat.com/home/launch?worldId=wrld_48f36aca-2f89-4766-be6f
 
 ### Usage
 
-<img src="images/20250227-Usage.png" width=40% height=40%>
+<img src="images/20250227-Usage.png" width=40%>
 
 Visit the demo world for a visual guide! Search for the world `AutoPosChair Demo` in-game.
 
@@ -158,7 +158,7 @@ YourDiningChair (Your own Prefab, empty GameObject, zero transform and uniform s
 
 ### Technical notes
 
-<img src="images/20250227-Technical.png" width=40% height=40%>
+<img src="images/20250227-Technical.png" width=40%>
 
 - Made with Udon Graph in Unity 2022.3.22f1 with VRChat SDK Worlds 3.7.5
 - The underlying principle is similar to UdonCalibratingChairs 4.0 by Superbstingray, but with a completely new algorithm and calibration process.
@@ -233,7 +233,7 @@ Some non-substantial parts are a derivative of UdonCalibratingChairs 4.0 by Supe
 
 Thank you for helping with testing and feedback and encouragement!
 
-<img src="images/20250227-Thanks.png" width=40% height=40%>
+<img src="images/20250227-Thanks.png" width=40%>
 
 
 ------------------------------------------------------------------------
