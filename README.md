@@ -11,9 +11,9 @@ By Uzer Tekton
 
 ### Download
 
-Download latest version prefab (2.0.0): https://github.com/UzerTekton/AutoPosChair/releases
+Download latest version prefab (2.0.1): https://github.com/UzerTekton/AutoPosChair/releases
 
-To use this in your world, please show credit: `AutoPosChair 2.0.0 by Uzer Tekton (MIT License)`
+To use this in your world, please show credit: `AutoPosChair 2.0.1 by Uzer Tekton (MIT License)`
 
 >#### Please donate to support this project:
 >
@@ -200,6 +200,12 @@ YourDiningChair (Empty GameObject, zero transform and uniform scale)
 
 ### Version history
 
+#### AutoPosChair 2.0.1
+
+2026-09-13
+
+- Fixed some harmless editor warnings.
+
 #### AutoPosChair 2.0.0
 
 2026-03-28
@@ -265,5 +271,5 @@ Thank you for helping with testing and feedback and encouragement!
 
 MIT License.
 
-In-game attribution: `AutoPosChair 2.0.0 by Uzer Tekton (MIT License)`
+In-game attribution: `AutoPosChair 2.0.1 by Uzer Tekton (MIT License)`
 
