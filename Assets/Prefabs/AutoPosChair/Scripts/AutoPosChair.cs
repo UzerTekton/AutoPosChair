@@ -1,4 +1,4 @@
-// AutoPosChair 2.0.0
+// AutoPosChair 2.0.1
 // Uzer Tekton
 // MIT License
 
@@ -18,17 +18,17 @@ namespace UzerTekton.AutoPosChair
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     public class AutoPosChair : UdonSharpBehaviour
     {
-        // Drawing gizmo in editor
-        #if !COMPILER_UDONSHARP && UNITY_EDITOR
-
+        // Variables for editor has to be outside the #if to suppress error messages because of Udon bug
         private BoxCollider _triggerCollider; // To get the size
         private bool _canDrawGizmo;
 
-        private static Color _gizmoInteractCubeColor = new Color(0.25f, 0.75f, 1, 0.25f);
-        private static Color _gizmoChairEdgeCenterColor = new Color(1, 0, 0, 0.25f);
+        private Color _gizmoInteractCubeColor = new Color(0.25f, 0.75f, 1, 0.25f);
+        private Color _gizmoChairEdgeCenterColor = new Color(1, 0, 0, 0.25f);
         private Vector3 _gizmoChairEdgeCenterCubeSize;
         [SerializeField] private bool alwaysShowGizmo = true;
 
+        // Drawing gizmo in editor
+        #if !COMPILER_UDONSHARP && UNITY_EDITOR
         private void OnValidate()
         {
             if (!TryGetComponent<BoxCollider>(out _triggerCollider) || !chairEdgeTransform)
@@ -39,7 +39,8 @@ namespace UzerTekton.AutoPosChair
 
             _canDrawGizmo = true;
 
-            _gizmoChairEdgeCenterCubeSize = new Vector3(0, _triggerCollider.size.x * 0.125f, _triggerCollider.size.x * 0.125f);
+            _gizmoChairEdgeCenterCubeSize =
+                new Vector3(0, _triggerCollider.size.x * 0.125f, _triggerCollider.size.x * 0.125f);
         }
 
         private void OnDrawGizmos()
@@ -64,7 +65,8 @@ namespace UzerTekton.AutoPosChair
             Gizmos.DrawCube(_triggerCollider.center, _triggerCollider.size);
 
             Gizmos.color = Color.red;
-            Gizmos.DrawLine(chairEdgeTransform.localPosition + Vector3.left * _triggerCollider.size.x * 0.5f, chairEdgeTransform.localPosition + Vector3.right * _triggerCollider.size.x * 0.5f);
+            Gizmos.DrawLine(chairEdgeTransform.localPosition + Vector3.left * _triggerCollider.size.x * 0.5f,
+                chairEdgeTransform.localPosition + Vector3.right * _triggerCollider.size.x * 0.5f);
 
             Gizmos.color = _gizmoChairEdgeCenterColor;
             Gizmos.DrawCube(chairEdgeTransform.localPosition, _gizmoChairEdgeCenterCubeSize);
@@ -118,9 +120,13 @@ namespace UzerTekton.AutoPosChair
 
         #region Variables for vector calculation
         // Experimentally these ratios should look natural enough on most avatars, sometimes with a bit of thigh squish.
-        private const float TargetPosAlongThighLength = 1f / 6f; // Ratio of thigh length to move back from knee (how far is chair edge moved in along the thigh length)
+        private const float
+            TargetPosAlongThighLength =
+                1f / 6f; // Ratio of thigh length to move back from knee (how far is chair edge moved in along the thigh length)
 
-        private const float TargetPosBelowThighLength = 1f / 12f; // Ratio of;thigh length to thigh thickness radius (how far is chair edge under the thigh vertically);
+        private const float
+            TargetPosBelowThighLength =
+                1f / 12f; // Ratio of;thigh length to thigh thickness radius (how far is chair edge under the thigh vertically);
 
 
         private Vector3 _vectorToTargetPos;
@@ -153,7 +159,8 @@ namespace UzerTekton.AutoPosChair
             if (!chairEdgeTransform) chairEdgeTransform = transform;
 
             // Making sure station enter and chair edge are in the same local space.
-            if (chairEdgeTransform.parent != _stationEnterTransform.parent) _stationEnterTransform.SetParent(chairEdgeTransform.parent, false);
+            if (chairEdgeTransform.parent != _stationEnterTransform.parent)
+                _stationEnterTransform.SetParent(chairEdgeTransform.parent, false);
 
             // Cache chair edge local position for performance
             _chairEdgeLocalPosition = chairEdgeTransform.localPosition;
@@ -178,7 +185,8 @@ namespace UzerTekton.AutoPosChair
             else
             {
                 // If AutoPosChair is inside a prefab or a parent, return its name.
-                _parentNameForLog = $"<color=#{GetHexColor((float)new Random(transform.parent.GetInstanceID()).NextDouble())}>Parent: {transform.parent.name}</color>";
+                _parentNameForLog =
+                    $"<color=#{GetHexColor((float)new Random(transform.parent.GetInstanceID()).NextDouble())}>Parent: {transform.parent.name}</color>";
             }
         }
 
@@ -211,7 +219,9 @@ namespace UzerTekton.AutoPosChair
             // For future reference: In the default avatar sitting animation, the first 0.2 s is standing still, followed by 0.5 s of sitting down.
             // Initial position is at a notional floor position in front of the chair, at a scaled distance from chair edge using avatar height. This is to maintain the proportions of a nominal player capsule size (165 cm) sitting on a typical chair 0.5 m in height regardless of player avatar height.
             // stationEnterTransform is constrained to the X = 0 plane of the chair edge for calibration to work. Adjustments are only in the Y and Z axis so that the avatar is centered to the chair and not sitting left or right.
-            _stationEnterTransform.localPosition = Vector3.LerpUnclamped(_chairEdgeLocalPosition, _chairEdgeLocalPosition + new Vector3(0f, -0.5f, 0.2f), _stationedPlayer.GetAvatarEyeHeightAsMeters() / 1.65f / chairEdgeTransform.lossyScale.y);
+            _stationEnterTransform.localPosition = Vector3.LerpUnclamped(_chairEdgeLocalPosition,
+                _chairEdgeLocalPosition + new Vector3(0f, -0.5f, 0.2f),
+                _stationedPlayer.GetAvatarEyeHeightAsMeters() / 1.65f / chairEdgeTransform.lossyScale.y);
 
 
             StartCalibration();
@@ -251,11 +261,19 @@ namespace UzerTekton.AutoPosChair
 
 
         // Checks if the avatar has leg bones, and if they are within reasonable proportions.
-        private bool CheckIfHumanoid() => _stationedPlayer.GetBonePosition(HumanBodyBones.LeftUpperLeg) != _vector3Zero && _stationedPlayer.GetBonePosition(HumanBodyBones.RightUpperLeg) != _vector3Zero && Vector3.Distance(_stationedPlayer.GetBonePosition(HumanBodyBones.LeftUpperLeg), _stationedPlayer.GetBonePosition(HumanBodyBones.LeftLowerLeg)) >= 0.001f && Vector3.Distance(_stationedPlayer.GetBonePosition(HumanBodyBones.RightUpperLeg), _stationedPlayer.GetBonePosition(HumanBodyBones.RightLowerLeg)) >= 0.001f && chairEdgeTransform.parent.TransformVector(_vectorToTargetPos).magnitude < 5;
+        private bool CheckIfHumanoid() =>
+            _stationedPlayer.GetBonePosition(HumanBodyBones.LeftUpperLeg) != _vector3Zero &&
+            _stationedPlayer.GetBonePosition(HumanBodyBones.RightUpperLeg) != _vector3Zero &&
+            Vector3.Distance(_stationedPlayer.GetBonePosition(HumanBodyBones.LeftUpperLeg),
+                _stationedPlayer.GetBonePosition(HumanBodyBones.LeftLowerLeg)) >= 0.001f &&
+            Vector3.Distance(_stationedPlayer.GetBonePosition(HumanBodyBones.RightUpperLeg),
+                _stationedPlayer.GetBonePosition(HumanBodyBones.RightLowerLeg)) >= 0.001f &&
+            chairEdgeTransform.parent.TransformVector(_vectorToTargetPos).magnitude < 5;
 
 
         // Checks if the station position has reached the target pos within an acceptable distance.
-        private bool CheckIfWithinPassingTolerance() => chairEdgeTransform.parent.TransformVector(_vectorToTargetPos).magnitude < 0.005f;
+        private bool CheckIfWithinPassingTolerance() =>
+            chairEdgeTransform.parent.TransformVector(_vectorToTargetPos).magnitude < 0.005f;
 
 
         // Calibration loops
@@ -346,12 +364,17 @@ namespace UzerTekton.AutoPosChair
         private Vector3 CalculateVectorToTargetPos()
         {
             // Calculate upper back knee pos based on each leg.
-            Vector3 leftLegkneeUpperBackPos = CalculateKneeUpperBackPosForLeg(_stationedPlayer.GetBonePosition(HumanBodyBones.LeftUpperLeg), _stationedPlayer.GetBonePosition(HumanBodyBones.LeftLowerLeg));
+            Vector3 leftLegkneeUpperBackPos = CalculateKneeUpperBackPosForLeg(
+                _stationedPlayer.GetBonePosition(HumanBodyBones.LeftUpperLeg),
+                _stationedPlayer.GetBonePosition(HumanBodyBones.LeftLowerLeg));
 
-            Vector3 rightLegkneeUpperBackPos = CalculateKneeUpperBackPosForLeg(_stationedPlayer.GetBonePosition(HumanBodyBones.RightUpperLeg), _stationedPlayer.GetBonePosition(HumanBodyBones.RightLowerLeg));
+            Vector3 rightLegkneeUpperBackPos = CalculateKneeUpperBackPosForLeg(
+                _stationedPlayer.GetBonePosition(HumanBodyBones.RightUpperLeg),
+                _stationedPlayer.GetBonePosition(HumanBodyBones.RightLowerLeg));
 
             // Decide which knee to use based on which one is the lower one in cross-legged sitting.
-            _kneeUpperBackPos = leftLegkneeUpperBackPos.y <= rightLegkneeUpperBackPos.y ? leftLegkneeUpperBackPos : rightLegkneeUpperBackPos;
+            _kneeUpperBackPos = leftLegkneeUpperBackPos.y <= rightLegkneeUpperBackPos.y ? leftLegkneeUpperBackPos :
+                rightLegkneeUpperBackPos;
             _kneeUpperBackPos.x = 0;
 
             // Return the required movement vector in local space.
@@ -363,7 +386,9 @@ namespace UzerTekton.AutoPosChair
         {
             Vector3 upperLegVector = lowerLegPos - upperLegPos;
 
-            return chairEdgeTransform.parent.InverseTransformPoint(lowerLegPos - chairEdgeTransform.forward * upperLegVector.magnitude * TargetPosAlongThighLength - chairEdgeTransform.up * upperLegVector.magnitude * TargetPosBelowThighLength);
+            return chairEdgeTransform.parent.InverseTransformPoint(lowerLegPos -
+                chairEdgeTransform.forward * upperLegVector.magnitude * TargetPosAlongThighLength -
+                chairEdgeTransform.up * upperLegVector.magnitude * TargetPosBelowThighLength);
         }
 
 
@@ -374,7 +399,9 @@ namespace UzerTekton.AutoPosChair
         private Vector3 CalculateFallBackFinalPos()
         {
             const float radiusRatio = 20f / 165f;
-            return new Vector3(_chairEdgeLocalPosition.x, _chairEdgeLocalPosition.y, _chairEdgeLocalPosition.z - _stationedPlayer.GetAvatarEyeHeightAsMeters() * radiusRatio / chairEdgeTransform.lossyScale.z);
+            return new Vector3(_chairEdgeLocalPosition.x, _chairEdgeLocalPosition.y,
+                _chairEdgeLocalPosition.z - _stationedPlayer.GetAvatarEyeHeightAsMeters() * radiusRatio /
+                chairEdgeTransform.lossyScale.z);
         }
 
 
@@ -418,7 +445,8 @@ namespace UzerTekton.AutoPosChair
             if (_isSmoothAdjustEnabled) return;
 
             // Start smooth adjust loops
-            _smoothAdjustCurrentPos = _stationEnterTransform.localPosition; // Only setup current pos when freshly starting
+            _smoothAdjustCurrentPos =
+                _stationEnterTransform.localPosition; // Only setup current pos when freshly starting
             _isSmoothAdjustEnabled = true;
             SendCustomEventDelayedFrames("SmoothAdjust", 0, EventTiming.PostLateUpdate);
         }
@@ -441,7 +469,9 @@ namespace UzerTekton.AutoPosChair
             }
 
             // Move station
-            _smoothAdjustCurrentPos = SpringDampVector3(_smoothAdjustCurrentPos, _smoothAdjustTargetPos, ref _smoothAdjustVelocity, Time.smoothDeltaTime, 4 * Mathf.PI); // Keeping current position in a variable to minimize externs
+            _smoothAdjustCurrentPos = SpringDampVector3(_smoothAdjustCurrentPos, _smoothAdjustTargetPos,
+                ref _smoothAdjustVelocity, Time.smoothDeltaTime,
+                4 * Mathf.PI); // Keeping current position in a variable to minimize externs
             _stationEnterTransform.localPosition = _smoothAdjustCurrentPos;
 
             // Progress the timer
@@ -535,7 +565,8 @@ namespace UzerTekton.AutoPosChair
         {
             if (!isLogging) return;
 
-            Debug.Log($"[<color=#{_instanceColorHex}>AutoPosChair</color>] {_parentNameForLog} {_playerNameForLog} {message}");
+            Debug.Log(
+                $"[<color=#{_instanceColorHex}>AutoPosChair</color>] {_parentNameForLog} {_playerNameForLog} {message}");
         }
 
         private static string GetHexColor(float hue, float saturation = 0.5f, float brightness = 0.875f)
@@ -553,7 +584,8 @@ namespace UzerTekton.AutoPosChair
             }
             else
             {
-                _playerNameForLog = $"<color=#{GetHexColor((float)new Random(_stationedPlayer.playerId).NextDouble())}>Player: {_stationedPlayer.displayName}</color>";
+                _playerNameForLog =
+                    $"<color=#{GetHexColor((float)new Random(_stationedPlayer.playerId).NextDouble())}>Player: {_stationedPlayer.displayName}</color>";
             }
         }
         #endregion
@@ -593,7 +625,8 @@ namespace UzerTekton.AutoPosChair
         //                           ~0.5    -> Heavily damped, fewer oscillations, smoother approach (this is default)
         //                      1          -> Critically damped (fastest return without overshoot)
         //                      > 1        -> Overdamped (no oscillations, slower smooth return)
-        private static float SpringDamp(float current, float target, ref float currentVelocity, float deltaTime, float omega0 = 50f, float zeta = 0.5f)
+        private static float SpringDamp(float current, float target, ref float currentVelocity, float deltaTime,
+            float omega0 = 50f, float zeta = 0.5f)
         {
             float x = current - target;
             float v = currentVelocity;
@@ -657,7 +690,8 @@ namespace UzerTekton.AutoPosChair
         // }
 
         // Gradually changes a vector towards a desired goal over time using SpringDamp.
-        private static Vector3 SpringDampVector3(Vector3 current, Vector3 target, ref Vector3 currentVelocity, float deltaTime, float omega0 = 50f, float zeta = 0.5f)
+        private static Vector3 SpringDampVector3(Vector3 current, Vector3 target, ref Vector3 currentVelocity,
+            float deltaTime, float omega0 = 50f, float zeta = 0.5f)
         {
             // current.x = SpringDamp(current.x, target.x, ref currentVelocity.x, deltaTime, omega0, zeta);
             // Forcing x to be 0 in our use case
@@ -701,11 +735,14 @@ namespace UzerTekton.AutoPosChair
 
         private GUIContent _vRCStationLabel = new GUIContent("VRC Station", "The VRC Station to be adjusted.");
 
-        private GUIContent _chairEdgeTransformLabel = new GUIContent("Chair edge Transform", "The Transform for locating the front edge of the seating surface.");
+        private GUIContent _chairEdgeTransformLabel = new GUIContent("Chair edge Transform",
+            "The Transform for locating the front edge of the seating surface.");
 
-        private GUIContent _isLoggingLabel = new GUIContent("Enable debug logging", "If enabled, this AutoPosChair will report its real-time status to the in-game debug log.\nYou may want to disable this if you want to hide this information from other players e.g. in a game world.");
+        private GUIContent _isLoggingLabel = new GUIContent("Enable debug logging",
+            "If enabled, this AutoPosChair will report its real-time status to the in-game debug log.\nYou may want to disable this if you want to hide this information from other players e.g. in a game world.");
 
-        private GUIContent _alwaysShowGizmoLabel = new GUIContent("Always show gizmo (editor only)", "If enabled, the gizmo (the highlighted interaction cube) will always be shown in the editor scene view.\nOtherwise, it will only show when the GameObject is selected.\nThis option has no effect on the uploaded prefab in-game.");
+        private GUIContent _alwaysShowGizmoLabel = new GUIContent("Always show gizmo (editor only)",
+            "If enabled, the gizmo (the highlighted interaction cube) will always be shown in the editor scene view.\nOtherwise, it will only show when the GameObject is selected.\nThis option has no effect on the uploaded prefab in-game.");
 
 
         public override void OnInspectorGUI()
@@ -718,7 +755,9 @@ namespace UzerTekton.AutoPosChair
             // Checking trigger Collider
             if (!_autoPosChair.TryGetComponent<Collider>(out Collider interactTriggerCollider))
             {
-                EditorGUILayout.HelpBox($"Trigger Collider is missing. A trigger Collider on the same GameObject is required for interaction.\nAdd one automatically?", MessageType.Warning);
+                EditorGUILayout.HelpBox(
+                    $"Trigger Collider is missing. A trigger Collider on the same GameObject is required for interaction.\nAdd one automatically?",
+                    MessageType.Warning);
 
                 if (GUILayout.Button("Add a trigger Collider to this GameObject with the default settings"))
                 {
@@ -732,7 +771,9 @@ namespace UzerTekton.AutoPosChair
             {
                 if (!interactTriggerCollider.isTrigger)
                 {
-                    EditorGUILayout.HelpBox($"The Collider is not set as a trigger. A trigger Collider on the same GameObject is required for interaction.\nSet it to a trigger automatically?", MessageType.Warning);
+                    EditorGUILayout.HelpBox(
+                        $"The Collider is not set as a trigger. A trigger Collider on the same GameObject is required for interaction.\nSet it to a trigger automatically?",
+                        MessageType.Warning);
 
 
                     if (GUILayout.Button("Set the Collider on this GameObject as a trigger Collider"))
@@ -745,7 +786,9 @@ namespace UzerTekton.AutoPosChair
             // Checking the layer this is on
             if (_autoPosChair.gameObject.layer != 8)
             {
-                EditorGUILayout.HelpBox($"It is recommended to put this GameObject on the Interactive layer so that stickers cannot be put onto the invisible collider.\nFix this automatically?", MessageType.Warning);
+                EditorGUILayout.HelpBox(
+                    $"It is recommended to put this GameObject on the Interactive layer so that stickers cannot be put onto the invisible collider.\nFix this automatically?",
+                    MessageType.Warning);
 
 
                 if (GUILayout.Button("Put this on the Interactive layer"))
@@ -759,11 +802,14 @@ namespace UzerTekton.AutoPosChair
             EditorGUILayout.PropertyField(vRCStation, _vRCStationLabel);
             if (!vRCStation.objectReferenceValue)
             {
-                const string stationWarning = "VRC Station reference is missing. Assign a VRC Station to be calibrated.";
+                const string stationWarning =
+                    "VRC Station reference is missing. Assign a VRC Station to be calibrated.";
 
                 if (_autoPosChair.TryGetComponent<VRCStation>(out VRCStation vRCStationOnSameGO))
                 {
-                    EditorGUILayout.HelpBox($"{stationWarning}\nFound a VRC Station attached to this GameObject, is this the station you want to adjust?", MessageType.Warning);
+                    EditorGUILayout.HelpBox(
+                        $"{stationWarning}\nFound a VRC Station attached to this GameObject, is this the station you want to adjust?",
+                        MessageType.Warning);
 
                     if (GUILayout.Button("Use the VRC Station found on this GameObject"))
                     {
@@ -776,7 +822,8 @@ namespace UzerTekton.AutoPosChair
 
                     if (GUILayout.Button("Add a new VRC Station to this GameObject"))
                     {
-                        vRCStation.objectReferenceValue = _autoPosChair.gameObject.AddComponent<VRC.SDK3.Components.VRCStation>();
+                        vRCStation.objectReferenceValue =
+                            _autoPosChair.gameObject.AddComponent<VRC.SDK3.Components.VRCStation>();
                     }
                 }
             }
@@ -785,18 +832,23 @@ namespace UzerTekton.AutoPosChair
                 VRCStation vRCStationReferenced = (VRCStation)vRCStation.objectReferenceValue;
                 if (!vRCStationReferenced.stationEnterPlayerLocation)
                 {
-                    const string stationEnterWarning = "Station Enter Location is missing on the VRC Station. This needs to be a separate GameObject for the calibration to work.";
+                    const string stationEnterWarning =
+                        "Station Enter Location is missing on the VRC Station. This needs to be a separate GameObject for the calibration to work.";
                     if (_autoPosChair.transform.Find("StationEnter"))
                     {
-                        EditorGUILayout.HelpBox($"{stationEnterWarning}\nFound a child GameObject named \"StationEnter\", use it?", MessageType.Warning);
+                        EditorGUILayout.HelpBox(
+                            $"{stationEnterWarning}\nFound a child GameObject named \"StationEnter\", use it?",
+                            MessageType.Warning);
                         if (GUILayout.Button("Use the found StationEnter"))
                         {
-                            vRCStationReferenced.stationEnterPlayerLocation = _autoPosChair.transform.Find("StationEnter");
+                            vRCStationReferenced.stationEnterPlayerLocation =
+                                _autoPosChair.transform.Find("StationEnter");
                         }
                     }
                     else
                     {
-                        EditorGUILayout.HelpBox($"{stationEnterWarning}\nCreate one automatically?", MessageType.Warning);
+                        EditorGUILayout.HelpBox($"{stationEnterWarning}\nCreate one automatically?",
+                            MessageType.Warning);
                         if (GUILayout.Button("Create a new StationEnter with the default settings"))
                         {
                             GameObject newStationEnter = new GameObject();
@@ -815,15 +867,19 @@ namespace UzerTekton.AutoPosChair
                     const string stationExitWarning = "Station Exit Location is missing on the VRC Station.";
                     if (_autoPosChair.transform.Find("StationExit"))
                     {
-                        EditorGUILayout.HelpBox($"{stationExitWarning}\nFound a child GameObject named \"StationExit\", use it?", MessageType.Warning);
+                        EditorGUILayout.HelpBox(
+                            $"{stationExitWarning}\nFound a child GameObject named \"StationExit\", use it?",
+                            MessageType.Warning);
                         if (GUILayout.Button("Use the found StationExit"))
                         {
-                            vRCStationReferenced.stationExitPlayerLocation = _autoPosChair.transform.Find("StationExit");
+                            vRCStationReferenced.stationExitPlayerLocation =
+                                _autoPosChair.transform.Find("StationExit");
                         }
                     }
                     else
                     {
-                        EditorGUILayout.HelpBox($"{stationExitWarning}\nCreate one automatically?", MessageType.Warning);
+                        EditorGUILayout.HelpBox($"{stationExitWarning}\nCreate one automatically?",
+                            MessageType.Warning);
                         if (GUILayout.Button("Create a new StationExit with the default settings"))
                         {
                             GameObject newStationExit = new GameObject();
@@ -843,12 +899,14 @@ namespace UzerTekton.AutoPosChair
 
             if (!chairEdgeTransform.objectReferenceValue)
             {
-                const string chairWarning = "Chair edge Transform reference is missing.  Assign a Transform placed at the middle point of the front edge of the seating surface, with Z pointing forward.";
+                const string chairWarning =
+                    "Chair edge Transform reference is missing.  Assign a Transform placed at the middle point of the front edge of the seating surface, with Z pointing forward.";
 
                 if (_autoPosChair.transform.Find("ChairEdge"))
 
                 {
-                    EditorGUILayout.HelpBox($"{chairWarning}\nFound a child GameObject named \"ChairEdge\", use it?", MessageType.Warning);
+                    EditorGUILayout.HelpBox($"{chairWarning}\nFound a child GameObject named \"ChairEdge\", use it?",
+                        MessageType.Warning);
                     if (GUILayout.Button("Use the found chair edge Transform"))
                     {
                         chairEdgeTransform.objectReferenceValue = _autoPosChair.transform.Find("ChairEdge");
